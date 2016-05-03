@@ -1,5 +1,3 @@
 services:
-	- Wame\LanguageModule\Registers\LanguageRoutePreprocessor
-	routePreprocessorRegister:
-		setup:
-		- register(@Wame\LanguageModule\Registers\LanguageRoutePreprocessor)
+	# Events
+	- {class: Wame\LanguageModule\Registers\LanguageRouteListener, tags: [run]}
