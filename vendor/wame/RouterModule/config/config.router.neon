@@ -1,0 +1,5 @@
+services:
+	- Wame\LanguageModule\Registers\LanguageRoutePreprocessor
+	routePreprocessorRegister:
+		setup:
+		- register(@Wame\LanguageModule\Registers\LanguageRoutePreprocessor)
