@@ -20,14 +20,12 @@ class LanguageRouteListener {
 	public function __construct(Router $router, GettextSetup $translator) {
 		$this->translator = $translator;
 		
-		dump("ëvent");
 		$router->onPreprocess[] = function($event) {
 			$this->process($event->getRoute());
 		};
 	}
 
 	private function process(RouterEntity $entity) {
-		dump($entity->route); dump(Strings::contains($entity->route, "<" . self::LANG_VAR . ">"));
 		if (Strings::contains($entity->route, "<" . self::LANG_VAR . ">")) {
 			$entity->route = str_replace("<" . self::LANG_VAR . ">", "<" . self::LANG_VAR . " " . $this->translator->routerAccept() . ">", $entity->route);
 			if (!$entity->getDefault('lang')) {
