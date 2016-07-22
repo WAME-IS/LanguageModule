@@ -25,8 +25,6 @@ abstract class TranslatableRepository extends BaseRepository
         $qb->whereCriteria($this->autoPrefixParams($criteria))
             ->autoJoinOrderBy($this->autoPrefixParams($orderBy));
 
-        \Tracy\Debugger::barDump($qb->getQuery());
-        
         try {
             $entity = $qb->setMaxResults(1)
                 ->getQuery()

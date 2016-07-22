@@ -2,9 +2,9 @@
 
 namespace Wame\Core\Entities;
 
-use Doctrine\ORM\Mapping as ORM,
-	Kdyby\Doctrine\MemberAccessException,
-	Wame\Core\Entities\BaseEntity;
+use Doctrine\ORM\Mapping as ORM;
+use Kdyby\Doctrine\MemberAccessException;
+use Wame\Core\Entities\BaseEntity;
 
 /**
  * Sueprclass used for entities with translation. Subclases have to contain
@@ -40,6 +40,9 @@ class TranslatableEntity extends BaseEntity {
 	 * @return BaseEntity Created language entity
 	 */
 	public function addLang($lang, $entity = null) {
+        if(!$entity) {
+//            $entity = ; /?????
+        }
 		$this->langs[$lang] = $entity;
 		return $this;
 	}
@@ -50,7 +53,7 @@ class TranslatableEntity extends BaseEntity {
 		} catch (MemberAccessException $e) {
 			$langEntity = $this->getCurrentLangEntity();
 			if ($langEntity) {
-				$value = $langEntity->$name;
+                $value = $langEntity->$name;
 				return $value;
 			}
 		}
@@ -66,6 +69,19 @@ class TranslatableEntity extends BaseEntity {
 			}
 		}
 	}
+    
+    public function __call($name, $args)
+    {
+        try {
+            parent::__call($name, $args);
+        } catch (MemberAccessException $e) {
+            $langEntity = $this->getCurrentLangEntity(true);
+			if ($langEntity) {
+				return call_user_func_array([$langEntity, $name], $args);
+			}
+        }
+        
+    }
 
 	/**
 	 * 
