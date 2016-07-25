@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\Core\Entities;
+namespace Wame\LanguageModule\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use Kdyby\Doctrine\MemberAccessException;

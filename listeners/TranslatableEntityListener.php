@@ -6,7 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Events\Subscriber;
 use Nette\Object;
-use Wame\Core\Entities\TranslatableEntity;
+use Wame\LanguageModule\Entities\TranslatableEntity;
 
 class TranslatableEntityListener extends Object implements Subscriber
 {

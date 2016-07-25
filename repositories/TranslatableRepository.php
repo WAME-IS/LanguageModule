@@ -1,9 +1,10 @@
 <?php
 
-namespace Wame\Core\Repositories;
+namespace Wame\LanguageModule\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\NoResultException;
+use Wame\Core\Repositories\BaseRepository;
 
 abstract class TranslatableRepository extends BaseRepository
 {
@@ -65,7 +66,7 @@ abstract class TranslatableRepository extends BaseRepository
         }
 
         return $qb->getQuery()
-            ->getResult();
+                ->getResult();
     }
 
     /**

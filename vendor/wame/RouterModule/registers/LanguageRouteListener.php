@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\LanguageModule\Registers;
+namespace Wame\LanguageModule\Vendor\Wame\RouterModule\Registers;
 
 use h4kuna\Gettext\GettextSetup,
 	Nette\Utils\Strings,
