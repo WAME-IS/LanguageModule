@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "wame/Core": "*"
+        "wame/Core": "*",
+        "wame/RouterModule": "*"
     },
     "autoload": {
         "classmap": [
