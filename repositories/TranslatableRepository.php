@@ -162,4 +162,11 @@ abstract class TranslatableRepository extends BaseRepository
         unset($params[$oldKey]);
         $params[$newKey] = $tmp;
     }
+    
+    public function createQueryBuilder($alias = null)
+    {
+        $qb = parent::createQueryBuilder($alias);
+        $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
+        return $qb;
+    }
 }
