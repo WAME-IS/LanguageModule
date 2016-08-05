@@ -73,7 +73,7 @@ class TranslatableEntity extends BaseEntity {
     public function __call($name, $args)
     {
         try {
-            parent::__call($name, $args);
+            return parent::__call($name, $args);
         } catch (MemberAccessException $e) {
             $langEntity = $this->getCurrentLangEntity(true);
 			if ($langEntity) {
