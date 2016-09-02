@@ -166,6 +166,7 @@ abstract class TranslatableRepository extends BaseRepository
     public function createQueryBuilder($alias = null)
     {
         $qb = parent::createQueryBuilder('a');
+//        $qb->select(['a', 'l0']);
         $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
         return $qb;
     }
