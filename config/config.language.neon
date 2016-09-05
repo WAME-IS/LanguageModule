@@ -1,5 +1,5 @@
-extensions:
-    gettextLatte: h4kuna\Gettext\DI\GettextLatteExtension
+#extensions:
+#    gettextLatte: h4kuna\Gettext\DI\GettextLatteExtension
 
 services:
     TranslatableEntityListener:
