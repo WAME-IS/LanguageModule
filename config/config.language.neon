@@ -1,7 +1,11 @@
-#extensions:
-#    gettextLatte: h4kuna\Gettext\DI\GettextLatteExtension
+extensions:
+    gettextLatteExtension: h4kuna\Gettext\DI\GettextLatteExtension
 
 services:
     TranslatableEntityListener:
         class: Wame\LanguageModule\Listeners\TranslatableEntityListener
         tags: [kdyby.subscriber]
+    
+    # h4kuna gettext-latte modular dictionary
+    gettextLatteExtension.dictionary:
+        class: Wame\LanguageModule\GettextLatte\Dictionary
