@@ -1,6 +1,9 @@
 extensions:
     gettextLatteExtension: h4kuna\Gettext\DI\GettextLatteExtension
 
+gettextLatteExtension:
+    loadAllDomains: Core
+
 services:
     TranslatableEntityListener:
         class: Wame\LanguageModule\Listeners\TranslatableEntityListener
