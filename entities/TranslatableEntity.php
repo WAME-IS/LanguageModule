@@ -13,7 +13,7 @@ use Wame\Core\Entities\BaseEntity;
  * @ORM\MappedSuperclass
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-class TranslatableEntity extends BaseEntity {
+abstract class TranslatableEntity extends BaseEntity {
 
 	private $currentLang;
 
@@ -39,11 +39,10 @@ class TranslatableEntity extends BaseEntity {
 	 * @param object $entity
 	 * @return BaseEntity Created language entity
 	 */
-	public function addLang($lang, $entity = null) {
-        if(!$entity) {
-//            $entity = ; /?????
-        }
+	public function addLang($lang, $entity)
+    {
 		$this->langs[$lang] = $entity;
+        $entity->setEntity($this);
 		return $this;
 	}
 

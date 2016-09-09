@@ -8,7 +8,18 @@ use Wame\Core\Repositories\BaseRepository;
 
 abstract class TranslatableRepository extends BaseRepository
 {
-
+    /** @var string */
+    protected $langEntityClass;
+    
+    
+    public function __construct($entityClass, $langEntityClass)
+    {
+        parent::__construct($entityClass);
+        
+        $this->langEntityClass = $langEntityClass;
+    }
+    
+    
     /**
      * Get one article by criteria
      * 
@@ -170,4 +181,17 @@ abstract class TranslatableRepository extends BaseRepository
         $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
         return $qb;
     }
+    
+    /**
+     * Get new entity
+     * 
+     * @return \Wame\Core\Repositories\entityName
+     */
+    public function getNewLangEntity()
+    {
+        $entityName = $this->langEntityClass;
+        
+        return new $entityName();
+    }
+    
 }
