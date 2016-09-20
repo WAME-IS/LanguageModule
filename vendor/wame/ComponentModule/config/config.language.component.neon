@@ -1,0 +1,4 @@
+services:
+	ComponentRegister:
+		setup:
+			- add(Wame\LanguageModule\Vendor\Wame\ComponentModule\LanguageSwitcherComponent())

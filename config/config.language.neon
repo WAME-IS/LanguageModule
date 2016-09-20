@@ -1,14 +1,44 @@
 extensions:
     gettextLatteExtension: h4kuna\Gettext\DI\GettextLatteExtension
 
+
 gettextLatteExtension:
     loadAllDomains: Core
+
 
 services:
     TranslatableEntityListener:
         class: Wame\LanguageModule\Listeners\TranslatableEntityListener
         tags: [kdyby.subscriber]
-    
+
     # h4kuna gettext-latte modular dictionary
     gettextLatteExtension.dictionary:
         class: Wame\LanguageModule\GettextLatte\Dictionary
+
+    # Repositories
+    LanguageRepository:
+        class: Wame\LanguageModule\Repositories\LanguageRepository
+        inject: yes
+
+    # Components
+    - Wame\LanguageModule\Components\ILanguageSwitcherControlFactory
+
+    # Forms
+    - Wame\LanguageModule\Forms\Containers\ICodeContainerFactory
+    - Wame\LanguageModule\Forms\Containers\ILocaleContainerFactory
+    - Wame\LanguageModule\Forms\Containers\ISortContainerFactory
+    - Wame\LanguageModule\Forms\Containers\ILanguageContainerFactory
+
+    LanguageSwitcherFormBuilder:
+        class: Wame\LanguageModule\Forms\LanguageSwitcherFormBuilder
+        setup:
+            - add(@Wame\LanguageModule\Forms\Containers\ILanguageContainerFactory, 'LanguageContainer', {priority: 90})
+
+    # Grids
+    - Wame\LanguageModule\Grids\Columns\Code
+    - Wame\LanguageModule\Grids\Columns\Locale
+
+
+doctrine:
+    metadata:
+        Wame\LanguageModule\Entities: %appDir%/../vendor/wame/LanguageModule/entities
