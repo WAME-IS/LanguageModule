@@ -20,6 +20,6 @@ services:
             - add(Wame\DataGridControl\Columns\Status(), null, {priority: 50})
             - add(Wame\DataGridControl\Actions\Edit())
             - add(Wame\DataGridControl\Actions\Delete())
-            - add(Wame\DataGridControl\ToolbarButtons\Add())
+            - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\Add())
             - add(Wame\DataGridControl\GroupActions\DeleteSelected())
             - add(Wame\DataGridControl\GroupActions\ChangeStatusSelected())
