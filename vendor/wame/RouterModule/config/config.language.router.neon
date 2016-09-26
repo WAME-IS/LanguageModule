@@ -1,0 +1,10 @@
+router:
+    defaultRoutes:
+        '/[<lang>/]admin/languages': 'Admin:Language'
+        '/[<lang>/]admin/language/create': 'Admin:Language:create'
+        '/[<lang>/]admin/language/edit/<id>': 'Admin:Language:edit'
+        '/[<lang>/]admin/language/delete/<id>': 'Admin:Language:delete'
+
+services:
+	# Events
+	- {class: Wame\LanguageModule\Vendor\Wame\RouterModule\Registers\LanguageRouteListener, tags: [kdyby.subscriber]}

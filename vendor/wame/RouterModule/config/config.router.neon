@@ -1,3 +1,0 @@
-services:
-	# Events
-	- {class: Wame\LanguageModule\Vendor\Wame\RouterModule\Registers\LanguageRouteListener, tags: [kdyby.subscriber]}
