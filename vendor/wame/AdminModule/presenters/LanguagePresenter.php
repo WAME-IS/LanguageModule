@@ -3,9 +3,8 @@
 namespace App\AdminModule\Presenters;
 
 use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
-use Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\LanguageGrid;
-use Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\LanguageFormBuilder;
 use Wame\LanguageModule\Repositories\LanguageRepository;
+use Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\LanguageGrid;
 
 class LanguagePresenter extends AdminFormPresenter
 {
@@ -14,9 +13,6 @@ class LanguagePresenter extends AdminFormPresenter
     
     /** @var LanguageGrid @inject */
 	public $languageGrid;
-    
-    /** @var LanguageFormBuilder @inject */
-    public $formBuilder;
     
     
     /** actions ***************************************************************/
@@ -100,5 +96,14 @@ class LanguagePresenter extends AdminFormPresenter
 		
 		return $this->languageGrid;
 	}
-    
+
+
+    /** abstract methods ******************************************************/
+
+    /** {@inheritdoc} */
+    protected function getFormBuilderServiceAlias()
+    {
+        return "Admin.LanguageFormBuilder";
+    }
+
 }

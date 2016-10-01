@@ -1,7 +1,7 @@
 services:
     # Forms
-    LanguageFormBuilder:
-        class: Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\LanguageFormBuilder
+    Admin.LanguageFormBuilder:
+        class: Wame\DynamicObject\Forms\EntityFormBuilder
         setup:
             - add(@Wame\DynamicObject\Forms\Containers\INameContainerFactory, 'NameContainer', {priority: 90})
             - add(@Wame\LanguageModule\Forms\Containers\ICodeContainerFactory, 'CodeContainer', {priority: 80})
@@ -10,6 +10,8 @@ services:
             - add(@Wame\LanguageModule\Forms\Containers\ISortContainerFactory, 'SortContainer', {priority: 50})
             - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 0})
 
+
+    # Grids
     LanguageGrid:
         class: Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\LanguageGrid
         setup:
