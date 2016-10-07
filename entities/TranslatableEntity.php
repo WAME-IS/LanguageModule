@@ -13,16 +13,19 @@ use Wame\Core\Entities\BaseEntity;
  * @ORM\MappedSuperclass
  * @author Dominik Gmiterko <ienze@ienze.me>
  */
-abstract class TranslatableEntity extends BaseEntity {
-
+abstract class TranslatableEntity extends BaseEntity
+{
+    /** @var string */
 	private $currentLang;
 
+    
 	/**
 	 * Get languages
 	 * 
-	 * @return array
+	 * @return BaseEntity[]
 	 */
-	public function getLangs() {
+	public function getLangs()
+    {
 		$return = [];
 
 		foreach ($this->langs as $lang) {
@@ -46,49 +49,14 @@ abstract class TranslatableEntity extends BaseEntity {
 		return $this;
 	}
 
-	public function &__get($name) {
-		try {
-			return parent::__get($name);
-		} catch (MemberAccessException $e) {
-			$langEntity = $this->getCurrentLangEntity();
-			if ($langEntity) {
-                $value = $langEntity->$name;
-				return $value;
-			}
-		}
-	}
-
-	public function __set($name, $value) {
-		try {
-			parent::__set($name, $value);
-		} catch (MemberAccessException $e) {
-			$langEntity = $this->getCurrentLangEntity(true);
-			if ($langEntity) {
-				$langEntity->$name = $value;
-			}
-		}
-	}
-    
-    public function __call($name, $args)
-    {
-        try {
-            return parent::__call($name, $args);
-        } catch (MemberAccessException $e) {
-            $langEntity = $this->getCurrentLangEntity(true);
-			if ($langEntity) {
-				return call_user_func_array([$langEntity, $name], $args);
-			}
-        }
-        
-    }
-
 	/**
 	 * 
 	 * @param boolean $createLang Whenever new lang should be created if not exist
 	 * @return BaseEntity
 	 * @throws MemberAccessException
 	 */
-	public function getCurrentLangEntity($createLang = false) {
+	public function getCurrentLangEntity($createLang = false)
+    {
 		if (!$this->getCurrentLang()) {
 			throw new MemberAccessException("Entity doesn't have setted current language.");
 		}
@@ -104,12 +72,66 @@ abstract class TranslatableEntity extends BaseEntity {
 		return $langs[$this->getCurrentLang()];
 	}
 
-	function getCurrentLang() {
+    /**
+     * Get current lang
+     * 
+     * @return string
+     */
+	public function getCurrentLang()
+    {
 		return $this->currentLang;
 	}
 
-	function setCurrentLang($currentLang) {
+    /**
+     * Set current lang
+     * 
+     * @param type $currentLang
+     * @return this
+     */
+	public function setCurrentLang($currentLang)
+    {
 		$this->currentLang = $currentLang;
+        
+        return $this;
 	}
+    
+    
+    /** {@inheritDoc} */
+	public function &__get($name) {
+		try {
+			return parent::__get($name);
+		} catch (MemberAccessException $e) {
+			$langEntity = $this->getCurrentLangEntity();
+			if ($langEntity) {
+                $value = $langEntity->$name;
+				return $value;
+			}
+		}
+	}
+
+    /** {@inheritDoc} */
+	public function __set($name, $value) {
+		try {
+			parent::__set($name, $value);
+		} catch (MemberAccessException $e) {
+			$langEntity = $this->getCurrentLangEntity(true);
+			if ($langEntity) {
+				$langEntity->$name = $value;
+			}
+		}
+	}
+    
+    /** {@inheritDoc} */
+    public function __call($name, $args)
+    {
+        try {
+            return parent::__call($name, $args);
+        } catch (MemberAccessException $e) {
+            $langEntity = $this->getCurrentLangEntity(true);
+			if ($langEntity) {
+				return call_user_func_array([$langEntity, $name], $args);
+			}
+        }
+    }
 
 }
