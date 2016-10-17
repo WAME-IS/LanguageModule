@@ -83,11 +83,11 @@ abstract class TranslatableRepository extends BaseRepository
     /**
      * Get all entries in pairs
      * 
-     * @param Array $criteria	criteria
+     * @param array $criteria	criteria
      * @param String $value		value
-     * @param Array $orderBy	order by
+     * @param array $orderBy	order by
      * @param String $key		key
-     * @return Array			entries
+     * @return array			entries
      */
     public function findPairs($criteria = [], $value = null, $orderBy = [], $key = NULL)
     {
