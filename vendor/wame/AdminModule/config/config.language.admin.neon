@@ -1,27 +1,33 @@
 services:
+    - Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ICodeContainerFactory
+    - Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ILocaleContainerFactory
+    - Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ISortContainerFactory
+
+
     # Forms
     Admin.LanguageFormBuilder:
         class: Wame\DynamicObject\Forms\EntityFormBuilder
         setup:
+            - setRepository(@LanguageRepository)
+            - redirectTo('Language:', { 'id' : null })
             - add(@Wame\DynamicObject\Forms\Containers\INameContainerFactory, 'NameContainer', {priority: 90})
-            - add(@Wame\LanguageModule\Forms\Containers\ICodeContainerFactory, 'CodeContainer', {priority: 80})
-            - add(@Wame\LanguageModule\Forms\Containers\ILocaleContainerFactory, 'LocaleContainer', {priority: 70})
+            - add(@Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ICodeContainerFactory, 'CodeContainer', {priority: 80})
+            - add(@Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ILocaleContainerFactory, 'LocaleContainer', {priority: 70})
             - add(@Wame\DynamicObject\Forms\Containers\IMainContainerFactory, 'MainContainer', {priority: 60})
-            - add(@Wame\LanguageModule\Forms\Containers\ISortContainerFactory, 'SortContainer', {priority: 50})
-            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 0})
+            - add(@Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers\ISortContainerFactory, 'SortContainer', {priority: 50})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 10})
 
 
     # Grids
-    LanguageGrid:
+    Admin.LanguageGrid:
         class: Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\LanguageGrid
         setup:
-            - add(Wame\DataGridControl\Columns\Id(), null, {priority: 90})
             - add(Wame\DataGridControl\Columns\Name(), null, {priority: 80})
             - add(Wame\LanguageModule\Grids\Columns\Code(), null, {priority: 70})
             - add(Wame\LanguageModule\Grids\Columns\Locale(), null, {priority: 60})
             - add(Wame\DataGridControl\Columns\Status(), null, {priority: 50})
-            - add(Wame\DataGridControl\Actions\Edit())
-            - add(Wame\DataGridControl\Actions\Delete())
+            - add(Wame\DataGridControl\Actions\EditModal(), null, {priority: 2})
+            - add(Wame\DataGridControl\Actions\Delete(), null, {priority: 1})
             - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\Add())
             - add(Wame\DataGridControl\GroupActions\DeleteSelected())
             - add(Wame\DataGridControl\GroupActions\ChangeStatusSelected())

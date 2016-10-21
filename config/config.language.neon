@@ -24,9 +24,6 @@ services:
     - Wame\LanguageModule\Components\ILanguageSwitcherControlFactory
 
     # Forms
-    - Wame\LanguageModule\Forms\Containers\ICodeContainerFactory
-    - Wame\LanguageModule\Forms\Containers\ILocaleContainerFactory
-    - Wame\LanguageModule\Forms\Containers\ISortContainerFactory
     - Wame\LanguageModule\Forms\Containers\ILanguageContainerFactory
 
     LanguageSwitcherFormBuilder:

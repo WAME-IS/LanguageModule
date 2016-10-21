@@ -1,9 +1,10 @@
 <?php
 
-namespace Wame\LanguageModule\Forms\Containers;
+namespace Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers;
 
 use Wame\DynamicObject\Forms\Containers\BaseContainer;
 use Wame\DynamicObject\Registers\Types\IBaseContainer;
+
 
 interface ISortContainerFactory extends IBaseContainer
 {
@@ -11,13 +12,15 @@ interface ISortContainerFactory extends IBaseContainer
 	public function create();
 }
 
+
 class SortContainer extends BaseContainer
 {
     /** {@inheritDoc} */
-    public function configure() 
+    public function configure()
 	{
 		$this->addHidden('sort');
     }
+    
 
     /** {@inheritDoc} */
     public function create($form, $values)

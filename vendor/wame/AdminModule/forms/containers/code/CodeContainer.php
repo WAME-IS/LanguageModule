@@ -1,9 +1,10 @@
 <?php
 
-namespace Wame\LanguageModule\Forms\Containers;
+namespace Wame\LanguageModule\Vendor\Wame\AdminModule\Forms\Containers;
 
 use Wame\DynamicObject\Forms\Containers\BaseContainer;
 use Wame\DynamicObject\Registers\Types\IBaseContainer;
+
 
 interface ICodeContainerFactory extends IBaseContainer
 {
@@ -11,14 +12,16 @@ interface ICodeContainerFactory extends IBaseContainer
 	public function create();
 }
 
+
 class CodeContainer extends BaseContainer
 {
     /** {@inheritDoc} */
-    public function configure() 
+    public function configure()
 	{
 		$this->addText('code', _('Code'))
 				->setRequired(_('Please enter code'));
     }
+
 
     /** {@inheritDoc} */
 	public function setDefaultValues($entity)
@@ -26,11 +29,13 @@ class CodeContainer extends BaseContainer
         $this['code']->setDefaultValue($entity->getCode());
 	}
 
+
     /** {@inheritDoc} */
     public function create($form, $values)
     {
         $form->getEntity()->setCode($values['code']);
     }
+    
 
     /** {@inheritDoc} */
     public function update($form, $values)
