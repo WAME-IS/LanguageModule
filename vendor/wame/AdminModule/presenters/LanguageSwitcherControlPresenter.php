@@ -5,7 +5,7 @@ namespace App\AdminModule\Presenters;
 use Wame\Core\Presenters\Traits\UseParentTemplates;
 
 
-class LanguageSwitcherControlPresenter extends AbastractComponentPresenter
+class LanguageSwitcherControlPresenter extends AbstractComponentPresenter
 {
     use UseParentTemplates;
 
