@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\LanguageModule\GettextLatte;
+namespace Wame\LanguageModule\Gettext;
 
 use h4kuna\Gettext\GettextException;
 use Nette\Caching\Cache;
@@ -14,18 +14,17 @@ use Wame\PluginLoader;
 
 class Dictionary extends \h4kuna\Gettext\Dictionary
 {
-
-    const DOMAIN = 'messages';
+    const DOMAIN = 'Core';
+    const DOMAIN_PATCH = 'domainPath';
 
     /** @var PluginLoader */
     private $pluginLoader;
 
-    /**
-     * List of domains
-     *
-     * @var array
-     */
-    private $domains = array();
+    /**  @var array */
+    private $domains = [];
+
+    /** @var array */
+    private $domainPatch = [];
 
     /** @var string */
     private $domain;
@@ -35,7 +34,7 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
 
     /**
      * Check path wiht dictionary
-     * 
+     *
      * @param string $path
      * @throws GettextException
      */
@@ -46,9 +45,10 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         $this->loadDomains();
     }
 
+
     /**
      * What domain you want.
-     * 
+     *
      * @param string $domain
      * @return self
      * @throws GettextException
@@ -58,14 +58,17 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         if ($this->domain == $domain) {
             return $this;
         }
+
         $this->loadDomain($domain);
         $this->domain = textdomain($domain);
+
         return $this;
     }
 
+
     /**
      * Load dictionary if not loaded.
-     * 
+     *
      * @param string $domain
      * @throws GettextException
      */
@@ -74,13 +77,16 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         if (!isset($this->domains[$domain])) {
             throw new GettextException('This domain does not exists: ' . $domain);
         }
-        if (is_string($this->domains[$domain] === FALSE)) {
-            bindtextdomain($domain, $this->domains[$domain]);
+
+        if ($this->domains[$domain] === FALSE) {
+            bindtextdomain($domain, $this->domainPatch[$domain]);
             bind_textdomain_codeset($domain, 'UTF-8');
             $this->domains[$domain] = TRUE;
         }
+
         return $domain;
     }
+
 
     /** @return string */
     public function getDomain()
@@ -88,9 +94,10 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         return $this->domain;
     }
 
+
     /**
      * Load all dictionaries.
-     * 
+     *
      * @param string $default
      */
     public function loadAllDomains($default)
@@ -98,19 +105,25 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         foreach ($this->domains as $domain => $_n) {
             $this->loadDomain($domain);
         }
+
         $this->setDomain($default);
     }
 
+
     /**
      * Offer file download.
-     * 
+     *
      * @param string $language
      * @throws GettextException
      */
     public function download($language)
     {
-        throw new NotSupportedException("This method is not supported");
+        dump($this->loadDomains());
+        exit;
+
+//        throw new NotSupportedException("This method is not supported");
     }
+
 
     /**
      * Save uploaded files.
@@ -124,9 +137,10 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         throw new NotSupportedException("This method is not supported");
     }
 
+
     /**
      * Filesystem path for domain
-     * 
+     *
      * @param string $lang
      * @param string $extension
      * @return string
@@ -136,18 +150,21 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         throw new NotSupportedException("This method is not supported");
     }
 
+
     /**
      * Check for available domain.
-     * 
+     *
      * @return array
      */
-    private function loadDomains()
+    public function loadDomains()
     {
-        if ($this->cache->load(self::DOMAIN) !== NULL) {
-            return $this->domains = $this->cache->load(self::DOMAIN);
-        }
+//        if ($this->cache->load(self::DOMAIN) !== NULL) {
+//            $this->domainPatch = $this->cache->load(self::DOMAIN_PATCH);
+//
+//            return $this->domains = $this->cache->load(self::DOMAIN);
+//        }
 
-        $domains = $match = array();
+        $files = $match = $domains = $domainPath = [];
         $paths = $this->loadLocalePaths();
         foreach ($paths as $path) {
             foreach (Finder::findFiles('*.po')->from($path) as $file) {
@@ -156,8 +173,13 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
                     $_dictionary = $file->getBasename('.po');
                     $domains[$match[1]][$_dictionary] = $_dictionary;
                     $files[] = $file->getPathname();
+                    $domainPath[$_dictionary] = $match[0];
                 }
             }
+        }
+
+        if (count($domains) == 0) {
+            throw new GettextException('*.po files not found, run php index.php generate:po');
         }
 
         $dictionary = $domains;
@@ -172,8 +194,12 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         }
 
         $data = array_combine($_domains, array_fill_keys($_domains, FALSE));
-        return $this->domains = $this->cache->save(self::DOMAIN, $data, array(Cache::FILES => $files));
+        $this->domains = $this->cache->save(self::DOMAIN, $data, array(Cache::FILES => $files));
+        $this->domainPatch = $this->cache->save(self::DOMAIN_PATCH, $domainPath, array(Cache::FILES => $files));
+
+        return $this->domains;
     }
+
 
     /**
      * @return string[] Locale paths
@@ -195,4 +221,5 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
 
         return $paths;
     }
+
 }

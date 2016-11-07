@@ -26,6 +26,7 @@ services:
             - add(Wame\LanguageModule\Grids\Columns\Code(), null, {priority: 70})
             - add(Wame\LanguageModule\Grids\Columns\Locale(), null, {priority: 60})
             - add(Wame\DataGridControl\Columns\Status(), null, {priority: 50})
+            - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Actions\Download(), null, {priority: 3})
             - add(Wame\DataGridControl\Actions\EditModal(), null, {priority: 2})
             - add(Wame\DataGridControl\Actions\Delete(), null, {priority: 1})
             - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\ToolbarButtons\Add())

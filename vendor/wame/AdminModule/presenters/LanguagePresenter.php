@@ -5,12 +5,20 @@ namespace App\AdminModule\Presenters;
 use Wame\DynamicObject\Vendor\Wame\AdminModule\Presenters\AdminFormPresenter;
 use Wame\LanguageModule\Entities\LanguageEntity;
 use Wame\LanguageModule\Repositories\LanguageRepository;
+use Wame\LanguageModule\Gettext\Dictionary;
+use Wame\LanguageModule\Gettext\Generator;
 
 
 class LanguagePresenter extends AdminFormPresenter
 {
     /** @var LanguageRepository @inject */
     public $repository;
+
+    /** @var Dictionary @inject */
+    public $dictionary;
+
+    /** @var Generator @inject */
+    public $generator;
 
     /** @var LanguageEntity */
 	public $entity;
@@ -26,6 +34,12 @@ class LanguagePresenter extends AdminFormPresenter
     public function actionDelete()
     {
         $this->entity = $this->repository->get(['id' => $this->id]);
+    }
+
+    public function actionDownload()
+    {
+        $this->generator->run();
+        exit;
     }
 
 
