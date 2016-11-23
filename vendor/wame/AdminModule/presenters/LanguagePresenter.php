@@ -31,15 +31,20 @@ class LanguagePresenter extends AdminFormPresenter
         $this->entity = $this->repository->get(['id' => $this->id]);
     }
 
+
     public function actionDelete()
     {
         $this->entity = $this->repository->get(['id' => $this->id]);
     }
 
+
     public function actionDownload()
     {
-        $this->generator->run();
-        exit;
+        $this->entity = $this->repository->get(['id' => $this->id]);
+
+        $this->dictionary->download($this->entity->getCode());
+
+        $this->redirect(':Admin:Language:', ['id' => null]);
     }
 
 

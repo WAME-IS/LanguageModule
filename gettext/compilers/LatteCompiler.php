@@ -2,7 +2,6 @@
 
 namespace Wame\LanguageModule\Gettext;
 
-use Nette\Utils\Strings;
 use Latte\RuntimeException;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Application\UI\ITemplateFactory;
@@ -38,7 +37,6 @@ class LatteCompiler
     public function __construct(ITemplateFactory $templateFactory)
     {
         $this->template = $templateFactory->createTemplate(new FakeControl());
-//        $this->temp = dirname($this->template->getLatte()->getCacheFile('foo'));
     }
 
 
@@ -236,10 +234,7 @@ class LatteCompiler
      */
     private function getTempFilePath($file)
     {
-        $explode = explode(VENDOR_PATH . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR, $file);
-        $filename = Strings::webalize(str_replace(DIRECTORY_SEPARATOR, '-', $explode[1]));
-
-        return $this->getTemp() . DIRECTORY_SEPARATOR . $filename . '.php';
+        return $this->getTemp() . DIRECTORY_SEPARATOR . uniqid() . '.php';
     }
 
 }

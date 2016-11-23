@@ -15,9 +15,6 @@ use Wame\LanguageModule\Repositories\LanguageRepository;
 
 class Generator
 {
-    const ADMIN_MODULE = 'AdminModule';
-
-
     /** @var PluginLoader */
     private $pluginLoader;
 
@@ -33,11 +30,11 @@ class Generator
     /** @var array */
     private $languages;
 
+    /** @var array */
+    private $templates;
+
     /** @var OutputInterface */
     private $output;
-
-    /** @var array */
-    private $timer = [];
 
 
     public function __construct(
@@ -52,6 +49,7 @@ class Generator
         $this->POCompiler = $POCompiler;
         $this->MOCompiler = $MOCompiler;
         $this->languages = $languageRepository->findPairs([], 'locale', ['code' => 'ASC'], 'code');
+        $this->templates = FileHelper::findFolders(TEMPLATES_PATH);
     }
 
 
@@ -64,120 +62,92 @@ class Generator
 
         $plugins = $this->pluginLoader->getPlugins();
 
-        $this->pluginsProcess($plugins);
-        $this->adminProcess($plugins);
-    }
-
-
-    /**
-     * Compile plugins
-     *
-     * @param array $plugins
-     */
-    public function pluginsProcess($plugins)
-    {
         $count = count($plugins);
         $i = 1;
 
         foreach ($plugins as $plugin) {
+            $this->writeOutput(sprintf('COMPILE <info>%s</info> (%s/%s)', $plugin->getName(), $i++, $count));
+
             $path = $plugin->getPluginPath();
             $temp = $path . DIRECTORY_SEPARATOR . 'temp';
             $explode = explode(DIRECTORY_SEPARATOR, $path);
             $domain = end($explode);
 
-            FileHelper::emptyDir($path . DIRECTORY_SEPARATOR . 'locale');
+        // Vendor
+            $this->generate($path, $temp, $domain);
 
-            $this->timer = [];
-            $this->writeOutput(sprintf('COMPILE <info>%s</info> (%s/%s)', $plugin->getName(), $i, $count));
-            $i++;
+        // App
+            $this->generate(APP_PATH . DIRECTORY_SEPARATOR . $domain . DIRECTORY_SEPARATOR, $temp, $domain);
+
+        // Templates
+            foreach ($this->templates as $name => $folder) {
+                $this->generate(TEMPLATES_PATH . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . $domain . DIRECTORY_SEPARATOR, $temp, $domain);
+            }
+        }
+    }
+
+
+    /**
+     * Generate *.po, *.mo files
+     *
+     * @param string $path
+     * @param string $temp
+     * @param string $domain
+     */
+    private function generate($path, $temp, $domain)
+    {
+        if (file_exists($path)) {
+            $vendorPath = $path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . PACKAGIST_NAME;
+
+        //  Ak chceme vyprazdnit prekladove subory tak vytvorime úplne nové súbory
+//            if ($domain != 'Core') { FileHelper::emptyDir($path . DIRECTORY_SEPARATOR . 'locale'); }
 
             $this->createTemp($temp);
             $this->createGitIgnore($temp);
 
-            $this->compileLatte($path, $temp, $path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . self::ADMIN_MODULE);
+            $this->compileLatte($path, $temp, $vendorPath);
             $this->compilePO($path, $temp, $domain);
+            $this->checkPO($temp, $domain);
             $this->compileMO($temp);
 
             $this->overwriteFiles($temp, $path);
             $this->emptyTemp($temp);
+
+            $this->vendorPathProcess($vendorPath, $temp, $domain);
         }
     }
 
 
     /**
-     * Compile adminModule
+     * Generate *.po, *.mo files in vendor path
      *
-     * @param array $plugins
+     * @param string $dir
+     * @param string $temp
+     * @param string $prefix
      */
-    public function adminProcess($plugins)
+    private function vendorPathProcess($dir, $temp, $prefix = null)
     {
-        $this->writeOutput('<info>START</info> AdminProcess');
+        if (file_exists($dir)) {
+            $plugins = FileHelper::findFolders($dir . DIRECTORY_SEPARATOR);
 
-        $adminPlugins = [];
-        $count = count($plugins);
-        $i = 1;
+            foreach ($plugins as $name => $folder) {
+                $path = $dir . DIRECTORY_SEPARATOR . $name;
 
-        foreach ($plugins as $plugin) {
-            $path = $plugin->getPluginPath();
-            $adminPath = $path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . self::ADMIN_MODULE;
+                $domain = '';
+                if ($prefix) { $domain .= $prefix . '.'; }
+                $domain .= $name;
 
-            if (is_dir($adminPath)) {
-                $temp = $path . DIRECTORY_SEPARATOR . 'temp';
-                $explode = explode(DIRECTORY_SEPARATOR, $path);
-                $domain = end($explode);
+            //  Ak chceme vyprazdnit prekladove subory tak vytvorime úplne nové súbory
+//                FileHelper::emptyDir($path . DIRECTORY_SEPARATOR . 'locale', true);
 
-                $this->timer = [];
-                $this->writeOutput(sprintf('COMPILE ADMIN <info>%s</info> (%s/%s)', $plugin->getName(), $i, $count));
+                $this->compileLatte($path, $temp);
+                $this->compilePO($path, $temp, $domain);
+                $this->checkPO($temp, $domain);
+                $this->compileMO($temp);
 
-                $this->compileLatte($adminPath, $temp);
-                $this->compilePO($adminPath, $temp, $domain);
-                $this->compilePO($temp . DIRECTORY_SEPARATOR . 'latteCompiler', $temp . DIRECTORY_SEPARATOR . 'latteCompiler', $domain);
-
-                $adminPlugins[$domain] = $temp . DIRECTORY_SEPARATOR . 'locale';
-            } else {
-                $this->writeOutput(sprintf('SKIP ADMIN <info>%s</info> (%s/%s)', $plugin->getName(), $i, $count));
+                $this->overwriteFiles($temp, $path);
+                $this->emptyTemp($temp);
             }
-
-            $i++;
-        }
-
-        $this->compileAdmin($adminPlugins);
-        $this->emptyAdminTemp($adminPlugins);
-    }
-
-
-    /**
-     * ADD Translations to AdminModule
-     *
-     * @param array $adminPlugins
-     */
-    private function compileAdmin($adminPlugins)
-    {
-        $this->writeOutput('ADD Translations to AdminModule');
-        $adminPath = VENDOR_PATH . DIRECTORY_SEPARATOR . PACKAGIST_NAME . DIRECTORY_SEPARATOR . self::ADMIN_MODULE . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR;
-
-        foreach ($this->languages as $code => $locale) {
-            $dir = $adminPath . $code . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR;
-            $translations = Translations::fromPoFile($dir . self::ADMIN_MODULE . '.po');
-
-            foreach ($adminPlugins as $name => $path) {
-                $translations->addFromPoFile($path . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . $name . '.po');
-                $translations->addFromPoFile($path . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'latteCompiler' . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . $name . '.po');
-            }
-
-            $translations->setHeader('Project-Id-Version', self::ADMIN_MODULE)
-                            ->setHeader('X-Poedit-Basepath', $adminPath . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR)
-                            ->toPoFile($dir . self::ADMIN_MODULE . '.po');
-
-            $this->compileMO($dir);
-        }
-    }
-
-
-    private function emptyAdminTemp($adminPlugins)
-    {
-        foreach ($adminPlugins as $path) {
-            $this->emptyTemp($path . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR);
         }
     }
 
@@ -222,6 +192,29 @@ class Generator
         $POCompiler->setDomain($domain);
         $POCompiler->setLanguages($this->languages);
         $POCompiler->run();
+    }
+
+
+    /**
+     * Check count PO translations
+     * if null remove file
+     *
+     * @param string $path
+     * @param string $domain
+     */
+    private function checkPO($path, $domain)
+    {
+        if ($domain == 'Core') return;
+
+        foreach ($this->languages as $code => $locale) {
+            $dir = $path . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR;
+
+            $translations = Translations::fromPoFile($dir . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . $domain . '.po');
+
+            if (count($translations) == 0) {
+                FileHelper::emptyDir($dir, true);
+            }
+        }
     }
 
 
@@ -310,21 +303,6 @@ class Generator
         if ($this->output instanceof OutputInterface) {
             $this->output->writeLn($text);
         }
-    }
-
-
-    /**
-     * Add time to timer
-     *
-     * @param string $title
-     * @param numeric $time
-     * @return $this
-     */
-    private function addTime($title, $time)
-    {
-        $this->timer[] = $title . ': ' . $time * 1000;
-
-        return $this;
     }
 
 }

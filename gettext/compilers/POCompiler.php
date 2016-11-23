@@ -210,7 +210,7 @@ class POCompiler
      */
     public function run()
     {
-        $this->files = FileHelper::findFiles($this->path, '*.php');
+        $this->files = FileHelper::findFiles([$this->getPath(), $this->getTemp() . DIRECTORY_SEPARATOR . 'latteCompiler'], '*.php');
 
         foreach ($this->languages as $code => $locale) {
             $this->compile($code);
@@ -229,7 +229,7 @@ class POCompiler
 
         foreach ($this->files as $file) {
             $phpTranslations = Translations::fromPhpCodeFile($file->getRealPath(), $this->getOptions());
-            $translations->mergeWith($phpTranslations, Merge::ADD);
+            $translations->mergeWith($phpTranslations, Merge::ADD | Merge::HEADERS_ADD);
         }
 
         $dir = $this->getTemp() . $this->getLocalePath($lang);
