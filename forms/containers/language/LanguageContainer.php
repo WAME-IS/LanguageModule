@@ -20,9 +20,9 @@ class LanguageContainer extends BaseContainer
     private $languageRepository;
 
 
-    public function __construct(LanguageRepository $languageRepository)
+    public function __construct(\Nette\DI\Container $container, LanguageRepository $languageRepository)
     {
-        parent::__construct();
+        parent::__construct($container);
 
         $this->languageRepository = $languageRepository;
     }
