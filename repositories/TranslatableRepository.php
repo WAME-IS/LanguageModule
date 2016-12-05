@@ -19,6 +19,12 @@ abstract class TranslatableRepository extends BaseRepository
         $this->langEntityClass = $langEntityClass;
     }
     
+    public function injectRepository(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager, \h4kuna\Gettext\GettextSetup $translator, \Nette\Security\User $user, \Wame\Core\Registers\RepositoryRegister $repositoryRegister) {
+        parent::injectRepository($container, $entityManager, $translator, $user, $repositoryRegister);
+        
+        $repositoryRegister->add($this, $this->langEntityClass);
+    }
+    
     
     /**
      * Get one article by criteria
@@ -162,7 +168,7 @@ abstract class TranslatableRepository extends BaseRepository
 
     private function autoPrefixParamsAssoc(&$params, $key, $assocMeta)
     {
-        if (array_key_exists($key, $assocMeta->columnNames)) {
+        if (array_key_exists(explode(" ", $key)[0], $assocMeta->columnNames)) {
             $this->autoPrefixParamsRename($params, $key, 'langs.' . $key);
         }
     }
@@ -177,7 +183,7 @@ abstract class TranslatableRepository extends BaseRepository
     public function createQueryBuilder($alias = 'a', $x = true)
     {
         $qb = parent::createQueryBuilder($alias);
-//        $qb->select(['a', 'l0']);
+        $qb->select(['a', 'l0']);
         if($x) $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
         return $qb;
     }
