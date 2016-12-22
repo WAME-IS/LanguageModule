@@ -156,6 +156,7 @@ abstract class TranslatableRepository extends BaseRepository
             $thisMeta = $this->entity->getClassMetadata();
             $assocMeta = $this->entityManager->getClassMetadata($thisMeta->associationMappings['langs']['targetEntity']);
             foreach (array_keys($params) as $key) {
+                
                 if (!array_key_exists($key, $thisMeta->columnNames)) {
                     //rename key if found in association
                     $this->autoPrefixParamsAssoc($params, $key, $assocMeta);
@@ -168,7 +169,8 @@ abstract class TranslatableRepository extends BaseRepository
 
     private function autoPrefixParamsAssoc(&$params, $key, $assocMeta)
     {
-        if (array_key_exists(explode(" ", $key)[0], $assocMeta->columnNames)) {
+        $col = explode(" ", $key)[0];
+        if (array_key_exists($col, $assocMeta->columnNames) && $col != 'id') {
             $this->autoPrefixParamsRename($params, $key, 'langs.' . $key);
         }
     }
