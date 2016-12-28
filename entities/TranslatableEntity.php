@@ -44,8 +44,10 @@ abstract class TranslatableEntity extends BaseEntity
 	 */
 	public function addLang($lang, $entity)
     {
-		$this->langs[$lang] = $entity;
-        $entity->setEntity($this);
+        if($entity) {
+            $this->langs[$lang] = $entity;
+            $entity->setEntity($this);
+        }
 		return $this;
 	}
 

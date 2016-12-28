@@ -287,9 +287,11 @@ class Dictionary extends \h4kuna\Gettext\Dictionary
         $paths = [];
         $paths[] = APP_PATH . DIRECTORY_SEPARATOR . 'locale';
 
-        foreach ($this->pluginLoader->getPlugins() as $plugin) {
-            $paths[] = $plugin->getPluginPath();
-        }
+        $paths[] = VENDOR_PATH . "/wame/LanguageModule/locale";
+        
+//        foreach ($this->pluginLoader->getPlugins() as $plugin) {
+//            $paths[] = $plugin->getPluginPath();
+//        }
 
         foreach ($paths as $index => $path) {
             if (!file_exists($path)) {
