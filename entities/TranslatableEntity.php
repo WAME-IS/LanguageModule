@@ -7,7 +7,7 @@ use Kdyby\Doctrine\MemberAccessException;
 use Wame\Core\Entities\BaseEntity;
 
 /**
- * Sueprclass used for entities with translation. Subclases have to contain
+ * Superclass used for entities with translation. Subclases have to contain
  * variable $langs holding collection of all language variations.
  * 
  * @ORM\MappedSuperclass
@@ -52,7 +52,8 @@ abstract class TranslatableEntity extends BaseEntity
 	}
 
 	/**
-	 * 
+	 * Get current lang entity
+     *
 	 * @param boolean $createLang Whenever new lang should be created if not exist
 	 * @return BaseEntity
 	 * @throws MemberAccessException
@@ -86,9 +87,9 @@ abstract class TranslatableEntity extends BaseEntity
 
     /**
      * Set current lang
-     * 
-     * @param type $currentLang
-     * @return this
+     *
+     * @param string $currentLang
+     * @return $this
      */
 	public function setCurrentLang($currentLang)
     {
