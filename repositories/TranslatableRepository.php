@@ -4,7 +4,13 @@ namespace Wame\LanguageModule\Repositories;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NoResultException;
+use h4kuna\Gettext\GettextSetup;
+use Kdyby\Doctrine\EntityManager;
+use Nette\DI\Container;
+use Nette\Security\User;
+use Wame\Core\Registers\RepositoryRegister;
 use Wame\Core\Repositories\BaseRepository;
+use Wame\LanguageModule\Entities\TranslatableEntity;
 
 abstract class TranslatableRepository extends BaseRepository
 {
@@ -18,19 +24,27 @@ abstract class TranslatableRepository extends BaseRepository
         
         $this->langEntityClass = $langEntityClass;
     }
-    
-    public function injectRepository(\Nette\DI\Container $container, \Kdyby\Doctrine\EntityManager $entityManager, \h4kuna\Gettext\GettextSetup $translator, \Nette\Security\User $user, \Wame\Core\Registers\RepositoryRegister $repositoryRegister) {
+
+
+    public function injectRepository(
+        Container $container,
+        EntityManager $entityManager,
+        GettextSetup $translator,
+        User $user,
+        RepositoryRegister $repositoryRegister
+    ) {
         parent::injectRepository($container, $entityManager, $translator, $user, $repositoryRegister);
         
         $repositoryRegister->add($this, $this->langEntityClass);
     }
-    
-    
+
+
     /**
      * Get one article by criteria
-     * 
+     *
      * @param array $criteria
      * @param array $orderBy
+     * @return TranslatableEntity
      */
     public function get($criteria = [], $orderBy = [])
     {
@@ -56,11 +70,12 @@ abstract class TranslatableRepository extends BaseRepository
 
     /**
      * Get all entries by criteria
-     * 
+     *
      * @param array $criteria
      * @param array $orderBy
      * @param string $limit
      * @param string $offset
+     * @return TranslatableEntity[]
      */
     public function find($criteria = [], $orderBy = [], $limit = null, $offset = null)
     {
@@ -93,7 +108,7 @@ abstract class TranslatableRepository extends BaseRepository
      * @param String $value		value
      * @param array $orderBy	order by
      * @param String $key		key
-     * @return array			entries
+     * @return TranslatableEntity[]
      */
     public function findPairs($criteria = [], $value = null, $orderBy = [], $key = NULL)
     {
@@ -104,7 +119,7 @@ abstract class TranslatableRepository extends BaseRepository
 
         $query = $this->entity->createQueryBuilder('e')
             ->whereCriteria($this->autoPrefixParams($criteria))
-            ->select("e.$value", "e.$key")
+            ->select(["e.$value", "e.$key"])
             ->resetDQLPart('from')->from($this->entity->getClassName(), 'e', 'e.' . $key)
             ->autoJoinOrderBy($this->autoPrefixParams((array) $orderBy))
             ->getQuery();
@@ -116,10 +131,10 @@ abstract class TranslatableRepository extends BaseRepository
 
     /**
      * Get all entries in pairs
-     * 
-     * @param Array $criteria	criteria
-     * @param String $key		key
-     * @return Array			entries
+     *
+     * @param array $criteria criteria
+     * @param String $key key
+     * @return TranslatableEntity[]
      */
     public function findAssoc($criteria = [], $key = 'id')
     {
@@ -142,6 +157,29 @@ abstract class TranslatableRepository extends BaseRepository
                 ->whereCriteria($this->autoPrefixParams($criteria))
                 ->select('COUNT(e)')
                 ->getQuery()->getSingleScalarResult();
+    }
+
+    /** {@inheritdoc} */
+    public function createQueryBuilder($alias = 'a', $x = true)
+    {
+        $qb = parent::createQueryBuilder($alias);
+
+        $qb->select(['a', 'l0']);
+        if($x) $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
+
+        return $qb;
+    }
+
+    /**
+     * Get new entity
+     *
+     * @return TranslatableEntity
+     */
+    public function getNewLangEntity()
+    {
+        $entityName = $this->langEntityClass;
+
+        return new $entityName();
     }
 
     /**
@@ -180,26 +218,6 @@ abstract class TranslatableRepository extends BaseRepository
         $tmp = $params[$oldKey];
         unset($params[$oldKey]);
         $params[$newKey] = $tmp;
-    }
-    
-    public function createQueryBuilder($alias = 'a', $x = true)
-    {
-        $qb = parent::createQueryBuilder($alias);
-        $qb->select(['a', 'l0']);
-        if($x) $qb->whereCriteria($this->autoPrefixParams(['lang' => $this->lang]));
-        return $qb;
-    }
-    
-    /**
-     * Get new entity
-     * 
-     * @return \Wame\Core\Repositories\entityName
-     */
-    public function getNewLangEntity()
-    {
-        $entityName = $this->langEntityClass;
-        
-        return new $entityName();
     }
     
 }
