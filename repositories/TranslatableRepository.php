@@ -112,7 +112,6 @@ abstract class TranslatableRepository extends BaseRepository
      */
     public function findPairs($criteria = [], $value = null, $orderBy = [], $key = NULL)
     {
-
         if (!$key) {
             $key = $this->entity->getClassMetadata()->getSingleIdentifierFieldName();
         }
