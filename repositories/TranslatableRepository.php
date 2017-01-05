@@ -3,6 +3,7 @@
 namespace Wame\LanguageModule\Repositories;
 
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\NoResultException;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Doctrine\EntityManager;
@@ -58,9 +59,7 @@ abstract class TranslatableRepository extends BaseRepository
             ->autoJoinOrderBy($this->autoPrefixParams($orderBy));
 
         try {
-            $entity = $qb->setMaxResults(1)
-                ->getQuery()
-                ->getSingleResult();
+            $entity = $qb->setMaxResults(1)->getQuery()->getSingleResult();
 
             return $entity;
         } catch (NoResultException $e) {
@@ -97,8 +96,7 @@ abstract class TranslatableRepository extends BaseRepository
             $qb->setFirstResult($offset);
         }
 
-        return $qb->getQuery()
-                ->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -107,7 +105,7 @@ abstract class TranslatableRepository extends BaseRepository
      * @param array $criteria	criteria
      * @param String $value		value
      * @param array $orderBy	order by
-     * @param String $key		key
+     * @param string $key		key
      * @return TranslatableEntity[]
      */
     public function findPairs($criteria = [], $value = null, $orderBy = [], $key = NULL)
@@ -132,7 +130,7 @@ abstract class TranslatableRepository extends BaseRepository
      * Get all entries in pairs
      *
      * @param array $criteria criteria
-     * @param String $key key
+     * @param string $key key
      * @return TranslatableEntity[]
      */
     public function findAssoc($criteria = [], $key = 'id')
@@ -144,12 +142,7 @@ abstract class TranslatableRepository extends BaseRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * Return count of articles
-     * 
-     * @param array $criteria	criteria
-     * @return integer			count
-     */
+    /** {@inheritdoc} */
     public function countBy($criteria = [])
     {
         return (int) $this->entity->createQueryBuilder('e')
@@ -182,7 +175,7 @@ abstract class TranslatableRepository extends BaseRepository
     }
 
     /**
-     * Can be used to automaticly add correct prefix to language fields.
+     * Can be used to automatically add correct prefix to language fields.
      * 
      * @param array $params
      * @return array
@@ -204,6 +197,14 @@ abstract class TranslatableRepository extends BaseRepository
         return $params;
     }
 
+
+    /**
+     * Auto-prefix ParamsAssoc
+     *
+     * @param array $params params
+     * @param string $key key
+     * @param ClassMetadata $assocMeta class metadata
+     */
     private function autoPrefixParamsAssoc(&$params, $key, $assocMeta)
     {
         $col = explode(" ", $key)[0];
@@ -212,6 +213,13 @@ abstract class TranslatableRepository extends BaseRepository
         }
     }
 
+    /**
+     * Auto-prefix ParamsRename
+     *
+     * @param array $params params
+     * @param string $oldKey old key
+     * @param string $newKey new key
+     */
     private function autoPrefixParamsRename(&$params, $oldKey, $newKey)
     {
         $tmp = $params[$oldKey];
