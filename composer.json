@@ -10,7 +10,12 @@
         }
     ],
     "require": {
-        "wame/Core": "*",
+        "wame/Core": "*"
+    },
+    "softRequire": {
+        "wame/AdminModule": "*",
+        "wame/ComponentModule": "*",
+        "wame/MenuModule": "*",
         "wame/RouterModule": "*"
     },
     "autoload": {
