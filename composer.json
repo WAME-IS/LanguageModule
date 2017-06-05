@@ -11,11 +11,12 @@
         }
     ],
     "repositories": [
-		{ "type": "composer", "url": "http://packages.wame.sk/" },
-		{ "type": "vcs", "url": "https://github.com/wamesro/gettext-latte" }
+        { "type": "composer", "url": "http://packages.wame.sk/" },
+        { "type": "vcs", "url": "https://github.com/wamesro/gettext-latte" }
 	],
+    "config": { "secure-http": false },
     "require": {
-        "h4kuna/gettext-latte": "dev-master",
+        "h4kuna/gettext-latte": "dev-dev-master",
         "gettext/gettext": "^v4.1",
         "wame/Core": "0.0.*"
     },
