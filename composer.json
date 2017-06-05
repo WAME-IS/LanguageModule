@@ -16,10 +16,10 @@
 	],
     "require": {
         "h4kuna/gettext-latte": "dev-master",
-        "gettext/gettext": "^v4.1"
+        "gettext/gettext": "^v4.1",
+        "wame/Core": "0.0.*"
     },
     "softRequire": {
-        "wame/Core": "0.0.*"
         "wame/AdminModule": "0.0.*",
         "wame/ComponentModule": "0.0.*",
         "wame/MenuModule": "0.0.*",
