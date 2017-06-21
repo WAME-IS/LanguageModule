@@ -18,7 +18,7 @@
     "require": {
         "h4kuna/gettext-latte": "dev-dev-master",
         "gettext/gettext": "^v4.1",
-        "wame/Core": "0.0.*"
+        "wame/Core": ">=0.0.1"
     },
     "softRequire": {
         "wame/AdminModule": "0.0.*",
