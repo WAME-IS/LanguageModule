@@ -21,10 +21,10 @@
         "wame/Core": ">=0.0.1"
     },
     "softRequire": {
-        "wame/AdminModule": "0.0.*",
-        "wame/ComponentModule": "0.0.*",
-        "wame/MenuModule": "0.0.*",
-        "wame/RouterModule": "0.0.*"
+        "wame/AdminModule": ">=0.0.1",
+        "wame/ComponentModule": ">=0.0.1",
+        "wame/MenuModule": ">=0.0.1",
+        "wame/RouterModule": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
