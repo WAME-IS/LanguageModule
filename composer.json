@@ -17,14 +17,14 @@
     "config": { "secure-http": false },
     "require": {
         "h4kuna/gettext-latte": "dev-dev-master",
-        "gettext/gettext": "^v4.1",
-        "wame/Core": ">=0.0.1"
+        "gettext/gettext": "^v4.1"
     },
     "softRequire": {
         "wame/AdminModule": ">=0.0.1",
         "wame/ComponentModule": ">=0.0.1",
         "wame/MenuModule": ">=0.0.1",
-        "wame/RouterModule": ">=0.0.1"
+        "wame/RouterModule": ">=0.0.1",
+        "wame/Core": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
