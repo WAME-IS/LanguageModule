@@ -1,6 +1,6 @@
 <?php
 
-namespace Wame\LanguageModule\Grids\Columns;
+namespace Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Columns;
 
 use Wame\DataGridControl\BaseGridItem;
 

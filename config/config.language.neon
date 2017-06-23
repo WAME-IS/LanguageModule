@@ -42,11 +42,6 @@ services:
             - add(@Wame\LanguageModule\Forms\Containers\ILanguageContainerFactory, 'LanguageContainer', {priority: 90})
 
 
-    # Grids
-    - Wame\LanguageModule\Grids\Columns\Code
-    - Wame\LanguageModule\Grids\Columns\Locale
-
-
     # Commands
     GeneratePOCommand:
         class: Wame\LanguageModule\Commands\GeneratePOCommand

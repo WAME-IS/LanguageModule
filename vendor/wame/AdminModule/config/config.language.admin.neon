@@ -18,13 +18,17 @@ services:
             - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'SubmitContainer', {priority: 10})
 
 
+    # Grids columns
+    - Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Columns\Code
+    - Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Columns\Locale
+
     # Grids
     Admin.LanguageGrid:
         class: Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\LanguageGrid
         setup:
             - add(Wame\DataGridControl\Columns\Name(), null, {priority: 80})
-            - add(Wame\LanguageModule\Grids\Columns\Code(), null, {priority: 70})
-            - add(Wame\LanguageModule\Grids\Columns\Locale(), null, {priority: 60})
+            - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Columns\Code(), null, {priority: 70})
+            - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Columns\Locale(), null, {priority: 60})
             - add(Wame\DataGridControl\Columns\Status(), null, {priority: 50})
             - add(Wame\LanguageModule\Vendor\Wame\AdminModule\Grids\Actions\Download(), null, {priority: 3})
             - add(Wame\DataGridControl\Actions\EditModal(), null, {priority: 2})
