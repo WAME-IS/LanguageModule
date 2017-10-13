@@ -35,6 +35,7 @@ abstract class TranslatableEntity extends BaseEntity
 		return $return;
 	}
 
+
 	/**
 	 * Add lang
 	 * 
@@ -44,12 +45,14 @@ abstract class TranslatableEntity extends BaseEntity
 	 */
 	public function addLang($lang, $entity)
     {
-        if($entity) {
+        if ($entity) {
             $this->langs[$lang] = $entity;
             $entity->setEntity($this);
         }
+
 		return $this;
 	}
+
 
 	/**
 	 * Get current lang entity
@@ -63,7 +66,9 @@ abstract class TranslatableEntity extends BaseEntity
 		if (!$this->getCurrentLang()) {
 			throw new MemberAccessException("Entity doesn't have setted current language.");
 		}
+
 		$langs = $this->getLangs();
+
 		if (!isset($langs[$this->getCurrentLang()])) {
 			if ($createLang) {
 				$this->addLang($this->getCurrentLang());
@@ -75,6 +80,7 @@ abstract class TranslatableEntity extends BaseEntity
 		return $langs[$this->getCurrentLang()];
 	}
 
+
     /**
      * Get current lang
      * 
@@ -84,6 +90,7 @@ abstract class TranslatableEntity extends BaseEntity
     {
 		return $this->currentLang;
 	}
+
 
     /**
      * Set current lang
@@ -100,29 +107,36 @@ abstract class TranslatableEntity extends BaseEntity
     
     
     /** {@inheritDoc} */
-	public function &__get($name) {
+	public function &__get($name)
+    {
 		try {
 			return parent::__get($name);
 		} catch (MemberAccessException $e) {
 			$langEntity = $this->getCurrentLangEntity();
+
 			if ($langEntity) {
                 $value = $langEntity->$name;
+
 				return $value;
 			}
 		}
 	}
 
+
     /** {@inheritDoc} */
-	public function __set($name, $value) {
+	public function __set($name, $value)
+    {
 		try {
 			parent::__set($name, $value);
 		} catch (MemberAccessException $e) {
 			$langEntity = $this->getCurrentLangEntity(true);
+
 			if ($langEntity) {
 				$langEntity->$name = $value;
 			}
 		}
 	}
+
     
     /** {@inheritDoc} */
     public function __call($name, $args)
