@@ -17,12 +17,12 @@ abstract class TranslatableRepository extends BaseRepository
 {
     /** @var string */
     protected $langEntityClass;
-    
-    
+
+
     public function __construct($entityClass, $langEntityClass)
     {
         parent::__construct($entityClass);
-        
+
         $this->langEntityClass = $langEntityClass;
     }
 
@@ -35,7 +35,7 @@ abstract class TranslatableRepository extends BaseRepository
         RepositoryRegister $repositoryRegister
     ) {
         parent::injectRepository($container, $entityManager, $translator, $user, $repositoryRegister);
-        
+
         $repositoryRegister->add($this, $this->langEntityClass);
     }
 
@@ -101,7 +101,7 @@ abstract class TranslatableRepository extends BaseRepository
 
     /**
      * Get all entries in pairs
-     * 
+     *
      * @param array $criteria	criteria
      * @param String $value		value
      * @param array $orderBy	order by
@@ -176,7 +176,7 @@ abstract class TranslatableRepository extends BaseRepository
 
     /**
      * Can be used to automatically add correct prefix to language fields.
-     * 
+     *
      * @param array $params
      * @return array
      */
@@ -186,7 +186,7 @@ abstract class TranslatableRepository extends BaseRepository
             $thisMeta = $this->entity->getClassMetadata();
             $assocMeta = $this->entityManager->getClassMetadata($thisMeta->associationMappings['langs']['targetEntity']);
             foreach (array_keys($params) as $key) {
-                
+
                 if (!array_key_exists($key, $thisMeta->columnNames)) {
                     //rename key if found in association
                     $this->autoPrefixParamsAssoc($params, $key, $assocMeta);
@@ -226,5 +226,5 @@ abstract class TranslatableRepository extends BaseRepository
         unset($params[$oldKey]);
         $params[$newKey] = $tmp;
     }
-    
+
 }
