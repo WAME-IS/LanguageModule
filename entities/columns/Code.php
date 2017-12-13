@@ -22,7 +22,7 @@ trait Code
 
 	public function setCode($code)
 	{
-		$this->code = $code;
+		$this->code = strtolower($code);
 		
 		return $this;
 	}

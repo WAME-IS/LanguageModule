@@ -44,13 +44,7 @@ class LanguageSwitcherControl extends BaseControl
      */
     protected function createComponentLanguageSwitcherForm()
     {
-        $form = $this->formBuilder->build();
-
-//        if ($this->sort) {
-//            $form['sort']->setValue($this->sort);
-//        }
-
-        return $form;
+        return $this->formBuilder->build();
     }
     
 }

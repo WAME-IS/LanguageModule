@@ -7,4 +7,4 @@ router:
 
 services:
 	# Events
-	- {class: Wame\LanguageModule\Vendor\Wame\RouterModule\Registers\LanguageRouteListener, tags: [kdyby.subscriber]}
+	- {class: Wame\LanguageModule\Vendor\Wame\RouterModule\Events\LanguageRouteListener, tags: [kdyby.subscriber]}

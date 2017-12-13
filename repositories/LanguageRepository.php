@@ -2,6 +2,8 @@
 
 namespace Wame\LanguageModule\Repositories;
 
+use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Wame\Core\Exception\RepositoryException;
 use Wame\Core\Repositories\BaseRepository;
 use Wame\LanguageModule\Entities\LanguageEntity;
@@ -16,9 +18,15 @@ class LanguageRepository extends BaseRepository
     const STATUS_UNPUBLISHED = 2;
 
 
-    public function __construct()
+    /** @var SessionSection */
+    private $session;
+
+
+    public function __construct(Session $session)
     {
         parent::__construct(LanguageEntity::class);
+
+        $this->session = $session->getSection('lang');
     }
 
 
@@ -99,6 +107,43 @@ class LanguageRepository extends BaseRepository
         foreach($entities as $entity) {
             $entity->setStatus($status);
         }
+    }
+
+
+    /**
+     * Switch language
+     *
+     * @param string $lang
+     */
+    public function switchLanguage($lang)
+    {
+        if ($this->user->isLoggedIn()) {
+            $this->user->getEntity()->setLang($lang);
+        }
+
+        $this->session->lang = $lang;
+        $this->lang = $lang;
+    }
+
+
+    /**
+     * Set language to session
+     *
+     * @param string $lang
+     */
+    public function setLanguage($lang)
+    {
+        $this->session->lang = $lang;
+        $this->lang = $lang;
+    }
+
+
+    /**
+     * Get language from session
+     */
+    public function getLanguage()
+    {
+        return $this->session->lang;
     }
     
     

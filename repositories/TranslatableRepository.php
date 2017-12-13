@@ -8,6 +8,7 @@ use Doctrine\ORM\NoResultException;
 use h4kuna\Gettext\GettextSetup;
 use Kdyby\Doctrine\EntityManager;
 use Nette\DI\Container;
+use Nette\Http\Session;
 use Nette\Security\User;
 use Wame\Core\Registers\RepositoryRegister;
 use Wame\Core\Repositories\BaseRepository;
@@ -27,14 +28,16 @@ abstract class TranslatableRepository extends BaseRepository
     }
 
 
+    /** {@inheritdoc} */
     public function injectRepository(
         Container $container,
         EntityManager $entityManager,
         GettextSetup $translator,
         User $user,
-        RepositoryRegister $repositoryRegister
+        RepositoryRegister $repositoryRegister,
+        Session $session
     ) {
-        parent::injectRepository($container, $entityManager, $translator, $user, $repositoryRegister);
+        parent::injectRepository($container, $entityManager, $translator, $user, $repositoryRegister, $session);
 
         $repositoryRegister->add($this, $this->langEntityClass);
     }

@@ -31,9 +31,10 @@ class LanguageContainer extends BaseContainer
     /** {@inheritDoc} */
     public function configure()
 	{
-        $languages = $this->languageRepository->findPairs([], 'name');
+        $languages = $this->languageRepository->findPairs([], 'code', ['name' => 'ASC'], 'code');
 
-		$this->addSelect('language', _('Language'), $languages)->setPrompt(_('- Select language -'));
+		$this->addSelect('language', _('Language'), $languages)
+                ->setDefaultValue($this->languageRepository->getLanguage());
     }
 
 }

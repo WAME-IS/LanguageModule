@@ -7,6 +7,8 @@ gettextLatteExtension:
 
 
 services:
+    - {class: Wame\LanguageModule\Listeners\PresenterListener(), tags: [run]}
+
     TranslatableEntityListener:
         class: Wame\LanguageModule\Listeners\TranslatableEntityListener
         tags: [kdyby.subscriber]
@@ -40,6 +42,7 @@ services:
         class: Wame\LanguageModule\Forms\LanguageSwitcherFormBuilder
         setup:
             - add(@Wame\LanguageModule\Forms\Containers\ILanguageContainerFactory, 'LanguageContainer', {priority: 90})
+            - add(@Wame\DynamicObject\Forms\Containers\ISubmitContainerFactory, 'ISubmitContainerFactory', {priority: 0})
 
 
     # Commands
