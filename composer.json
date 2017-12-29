@@ -1,5 +1,5 @@
 {
-    "name": "wame/LanguageModule",
+    "name": "wameis/LanguageModule",
     "version": "0.0.1",
     "description": "CMS WAME admin",
     "homepage": "http://wame.sk/cms-wame-admin",
@@ -20,11 +20,11 @@
         "gettext/gettext": "^v4.1"
     },
     "softRequire": {
-        "wame/AdminModule": ">=0.0.1",
-        "wame/ComponentModule": ">=0.0.1",
-        "wame/MenuModule": ">=0.0.1",
-        "wame/RouterModule": ">=0.0.1",
-        "wame/Core": ">=0.0.1"
+        "wameis/AdminModule": ">=0.0.1",
+        "wameis/ComponentModule": ">=0.0.1",
+        "wameis/MenuModule": ">=0.0.1",
+        "wameis/RouterModule": ">=0.0.1",
+        "wameis/Core": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
