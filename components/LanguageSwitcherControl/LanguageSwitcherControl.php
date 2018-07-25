@@ -3,6 +3,7 @@
 namespace Wame\LanguageModule\Components;
 
 use Wame\Core\Components\BaseControl;
+use Wame\LanguageModule\Entities\LanguageEntity;
 use Wame\LanguageModule\Forms\LanguageSwitcherFormBuilder;
 use Wame\DynamicObject\Forms\BaseForm;
 
@@ -33,7 +34,7 @@ class LanguageSwitcherControl extends BaseControl
     /** {@inheritDoc} */
     public function render()
     {
-        
+        $this->template->languageEntity = $this->getStatus()->get(LanguageEntity::class);
     }
     
     
